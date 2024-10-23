@@ -1,0 +1,6 @@
+services:
+  first-app:
+    build: .
+    container_name: first-app
+    ports:
+      - "3000:3000"
