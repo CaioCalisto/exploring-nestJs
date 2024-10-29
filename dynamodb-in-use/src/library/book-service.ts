@@ -3,14 +3,12 @@ import { v4 as uuid } from 'uuid';
 import { CreateBookDto, UpdateBookDto } from './book';
 import { dynamoDBClient } from '../dynamodb-client';
 
-const TABLE_NAME = 'book';
-
 @Injectable()
 export class BookService {
   async create(createBookDto: CreateBookDto) {
     return await dynamoDBClient()
       .put({
-        TableName: TABLE_NAME,
+        TableName: process.env.TABLE_NAME,
         Item: {
           bookId: uuid(),
           title: createBookDto.title,
@@ -24,7 +22,7 @@ export class BookService {
   async findAll() {
     const results = await dynamoDBClient()
       .scan({
-        TableName: TABLE_NAME,
+        TableName: process.env.TABLE_NAME,
       })
       .promise();
 
@@ -35,7 +33,7 @@ export class BookService {
     console.log(bookId, 'kakaka');
     const result = await dynamoDBClient()
       .get({
-        TableName: TABLE_NAME,
+        TableName: process.env.TABLE_NAME,
         Key: { bookId },
       })
       .promise();
@@ -46,7 +44,7 @@ export class BookService {
   async update(bookId: string, updateBookDto: UpdateBookDto) {
     const updated = await dynamoDBClient()
       .update({
-        TableName: TABLE_NAME,
+        TableName: process.env.TABLE_NAME,
         Key: { bookId },
         UpdateExpression:
           'set #title = :title, author = :author, publicationYear = :publicationYear',
@@ -68,7 +66,7 @@ export class BookService {
   async remove(bookId: string) {
     return await dynamoDBClient()
       .delete({
-        TableName: TABLE_NAME,
+        TableName: process.env.TABLE_NAME,
         Key: { bookId },
       })
       .promise();
